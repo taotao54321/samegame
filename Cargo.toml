@@ -1,0 +1,11 @@
+[package]
+name = "samegame"
+version = "0.1.0"
+authors = ["taotao54321 <taotao54321@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0"
+ggez = "0.5"
+itertools = "0.9"
+rand = "0.7"
