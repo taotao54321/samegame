@@ -4,6 +4,7 @@ use ggez::event;
 use ggez::ContextBuilder;
 
 mod board;
+mod font;
 mod game_state;
 
 use crate::game_state::GameState;

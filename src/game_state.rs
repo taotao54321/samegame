@@ -5,6 +5,7 @@ use ggez::{Context, GameResult};
 use itertools::iproduct;
 
 use crate::board::Board;
+use crate::font::Font;
 
 const CURSOR_INVALID: (usize, usize) = (usize::max_value(), usize::max_value());
 
@@ -19,6 +20,8 @@ enum Command {
 #[derive(Debug)]
 pub struct GameState {
     imgs_tile: Vec<Image>,
+    font: Font,
+
     board: Board,
     cursor: (usize, usize),
     cmd: Command,
@@ -33,6 +36,7 @@ impl GameState {
         let imgs_tile = (1..=5)
             .map(|i| Image::new(ctx, format!("/tile-{}.png", i)))
             .collect::<GameResult<Vec<_>>>()?;
+        let font = Font::new(ctx, "/font.png")?;
 
         let board = Board::random(Self::BOARD_W, Self::BOARD_H);
 
@@ -43,6 +47,7 @@ impl GameState {
 
         Ok(Self {
             imgs_tile,
+            font,
             board,
             cursor,
             cmd,
@@ -71,7 +76,6 @@ impl event::EventHandler for GameState {
             Command::Erase(x, y) => {
                 let n = self.board.erase_component(x, y);
                 self.score += (n - 1).pow(2) as i32;
-                eprintln!("Score: {}", self.score);
             }
             Command::Reset => {
                 self.board = Board::random(Self::BOARD_W, Self::BOARD_H);
@@ -119,6 +123,12 @@ impl event::EventHandler for GameState {
                 graphics::draw(ctx, &mesh, graphics::DrawParam::default())?;
             }
         }
+
+        self.font
+            .draw_str(ctx, 520.0, 360.0, format!("Score: {}", self.score))?;
+
+        self.font
+            .draw_str(ctx, 10.0, 450.0, "R:Reset, Q/Esc:Quit")?;
 
         graphics::present(ctx)?;
 
