@@ -75,7 +75,9 @@ impl event::EventHandler for GameState {
         match self.cmd {
             Command::Erase(x, y) => {
                 let n = self.board.erase_component(x, y);
-                self.score += (n - 1).pow(2) as i32;
+                if n >= 2 {
+                    self.score += (n - 1).pow(2) as i32;
+                }
             }
             Command::Reset => {
                 self.board = Board::random(Self::BOARD_W, Self::BOARD_H);
